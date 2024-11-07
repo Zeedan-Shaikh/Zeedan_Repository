@@ -1,0 +1,7969 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\begin_modules
+knitr
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1cm
+\topmargin 1cm
+\rightmargin 1cm
+\bottommargin 1cm
+\headheight 1cm
+\headsep 1cm
+\footskip 1cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Comparative Analysis of Classification Techniques for Predicting Diabetes
+ Onset in Pima Indian Women
+\end_layout
+
+\begin_layout Author
+Zeedan Shaikh
+\end_layout
+
+\begin_layout Section*
+Introduction
+\end_layout
+
+\begin_layout Standard
+Diabetes is a chronic health condition with significant long-term implications
+ for individuals and healthcare systems worldwide.
+ Early detection is crucial for effective management and prevention of complicat
+ions.
+ This project focuses on predicting the onset of diabetes in female Pima
+ Indian individuals, using a dataset of medical records with key health
+ indicators.
+ The dataset allows for the application of various statistical and machine
+ learning methods to assess their predictive capabilities.
+\end_layout
+
+\begin_layout Standard
+Through this study, we aim to explore the effectiveness of multiple classificati
+on techniques, each with unique approaches to handling data patterns and
+ making predictions.
+ By comparing the performance of these classifiers, we seek to identify
+ the most reliable and accurate model for early diabetes prediction in this
+ specific population, ultimately contributing to the understanding of model
+ selection in health prediction tasks.
+\end_layout
+
+\begin_layout Subsubsection*
+Loading the required packages
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+pacman::p_load(class,FNN,MASS,caret,mda,randomForest,adabag,ipred,rpart,ROCR,dpl
+yr, ggplot2, GGally, corrplot,Amelia)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Methodology
+\end_layout
+
+\begin_layout Itemize
+Data Preparation and Splitting
+\end_layout
+
+\begin_layout Standard
+Load the diabetes.csv dataset containing 768 observations on 8 medical features.
+ Randomly divide the data into training and test sets, ensuring a 2:1 class
+ ratio.
+ This balanced split helps in model training by preserving the class distributio
+n across both sets.
+\end_layout
+
+\begin_layout Itemize
+Perform EDA
+\end_layout
+
+\begin_layout Itemize
+Model Training
+\end_layout
+
+\begin_layout Standard
+𝑘-Nearest Neighbour (𝑘-NN) Perform three variations of 𝑘-NN classification:
+ 
+\end_layout
+
+\begin_layout Enumerate
+Choose the optimal 𝑘 value using leave-one-out cross-validation to maximize
+ model performance.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Train using a condensed training set to reduce the number of data points
+ while retaining essential decision boundaries.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Train using an edited training set obtained through the MULTIEDIT algorithm
+ to remove noise and improve classification accuracy.
+\end_layout
+
+\begin_layout Itemize
+Discriminant Analysis Models
+\end_layout
+
+\begin_layout Enumerate
+Linear Discriminant Analysis (LDA) and Quadratic Discriminant Analysis (QDA):
+ Apply LDA and QDA models to the training data to explore the impact of
+ linear and quadratic decision boundaries.
+ 
+\end_layout
+
+\begin_layout Itemize
+Flexible and Penalized Discriminant Analysis 
+\end_layout
+
+\begin_layout Enumerate
+Flexible Discriminant Analysis (FDA) with Multivariate Adaptive Regression
+ Splines (MARS): Apply FDA to capture non-linearity in data using the MARS
+ algorithm.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Penalized Discriminant Analysis (PDA) with Generalized Ridge Regression:
+ Use PDA to apply regularization, reducing model complexity and improving
+ performance.
+ 
+\end_layout
+
+\begin_layout Itemize
+Mixture Discriminant Analysis (MDA) 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Apply MDA with two subclasses per class to allow for flexibility within
+ each class distribution.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Logistic Regression
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Train a logistic regression model as a baseline for comparison against the
+ other models.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Ensemble Models 
+\end_layout
+
+\begin_layout Enumerate
+Bagging: Use Breiman’s bagging algorithm with classification trees as single
+ classifiers to reduce variance and improve robustness.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Boosting (AdaBoost.M1): Implement the AdaBoost.M1 algorithm by Freund and
+ Schapire, using classification trees, to iteratively improve model accuracy.
+\end_layout
+
+\begin_layout Enumerate
+Random Forests: Train a random forest model, an ensemble of decision trees,
+ to improve predictive accuracy and feature importance interpretation.
+ 
+\end_layout
+
+\begin_layout Itemize
+Performance Evaluation
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+For each classifier, predict class labels on both the training and test
+ sets.
+ Record and compare the following metrics: Confusion Matrix: Display true
+ positives, true negatives, false positives, and false negatives.
+ Accuracy: Calculate the percentage of correctly classified observations.
+ Precision, Recall, and F1-Score: Report these metrics to evaluate the balance
+ between precision and recall.
+ Summarize the results in a comparative table to provide insights into each
+ classifier’s performance on both training and test data.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+ROC Curve Analysis
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Plot the ROC curves for each classifier on a single graph to visualize and
+ compare their ability to distinguish between classes.
+ This analysis will use the ROCR package to derive the ROC curves, allowing
+ for easy performance comparison.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Feature Importance Analysis with Random Forests
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+From the random forest model, generate a variable importance plot to identify
+ which features contribute most to diabetes onset prediction.
+ Comment on how these features align with clinical expectations and the
+ importance of each in model performance.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Loading the dataset
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+data=read.csv("C:
+\backslash
+
+\backslash
+Users
+\backslash
+
+\backslash
+zeeda
+\backslash
+
+\backslash
+OneDrive
+\backslash
+
+\backslash
+Desktop
+\backslash
+
+\backslash
+pg sem 3
+\backslash
+
+\backslash
+AP
+\backslash
+
+\backslash
+Assigments
+\backslash
+
+\backslash
+Data
+\backslash
+
+\backslash
+diabetes - diabetes.csv")
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+EDA
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+# View the first few rows and summary statistics 
+\end_layout
+
+\begin_layout Plain Layout
+
+head(data) 
+\end_layout
+
+\begin_layout Plain Layout
+
+summary(data)
+\end_layout
+
+\begin_layout Plain Layout
+
+# Check for missing values 
+\end_layout
+
+\begin_layout Plain Layout
+
+missing_values <- colSums(is.na(data)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+print(missing_values)
+\end_layout
+
+\begin_layout Plain Layout
+
+# Replace 0 values in certain columns with NA (if 0 is considered invalid)
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+cols_with_zero <- c("Glucose", "BloodPressure", "SkinThickness", "Insulin",
+ "BMI") 
+\end_layout
+
+\begin_layout Plain Layout
+
+data[cols_with_zero] <- lapply(data[cols_with_zero], function(x) ifelse(x
+ == 0, NA, x))
+\end_layout
+
+\begin_layout Plain Layout
+
+# Visualize missing values pattern 
+\end_layout
+
+\begin_layout Plain Layout
+
+missmap(data, main = "Missing values in the dataset", col = c("red", "black"))
+\end_layout
+
+\begin_layout Plain Layout
+
+data[cols_with_zero] <- lapply(data[cols_with_zero], function(x) ifelse(is.na(x),
+ median(x, na.rm = TRUE), x)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+# Plot distributions for each variable 
+\end_layout
+
+\begin_layout Plain Layout
+
+numeric_columns <- names(data)[sapply(data, is.numeric)] 
+\end_layout
+
+\begin_layout Plain Layout
+
+for (col in numeric_columns) 
+\end_layout
+
+\begin_layout Plain Layout
+
+{   
+\end_layout
+
+\begin_layout Plain Layout
+
+print(     ggplot(data, aes_string(x = col)) +       geom_histogram(bins
+ = 30, fill = "skyblue", color = "black") +       labs(title = paste("Distributi
+on of", col), x = col, y = "Frequency") +       theme_minimal()   ) }
+\end_layout
+
+\begin_layout Plain Layout
+
+# Check the correlation matrix 
+\end_layout
+
+\begin_layout Plain Layout
+
+cor_matrix <- cor(data %>% select(-Outcome), use = "complete.obs")
+\end_layout
+
+\begin_layout Plain Layout
+
+print(cor_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+# Visualize the correlation matrix 
+\end_layout
+
+\begin_layout Plain Layout
+
+cor_matrix <- cor(data[numeric_columns], use = "complete.obs") 
+\end_layout
+
+\begin_layout Plain Layout
+
+corrplot(cor_matrix, method = "circle", type = "lower", diag = FALSE)
+\end_layout
+
+\begin_layout Plain Layout
+
+# Plot Outcome variable to see class distribution 
+\end_layout
+
+\begin_layout Plain Layout
+
+ggplot(data, aes(x = factor(Outcome))) +   geom_bar(fill = "steelblue")
+ +   labs(title = "Outcome Distribution", x = "Diabetes Outcome", y = "Count")
+ +   theme_minimal()
+\end_layout
+
+\begin_layout Plain Layout
+
+ggpairs(data %>% select(Pregnancies, Glucose, BloodPressure, SkinThickness,
+ Insulin, BMI, Age, Outcome)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Model Building:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+data=read.csv("C:
+\backslash
+
+\backslash
+Users
+\backslash
+
+\backslash
+zeeda
+\backslash
+
+\backslash
+OneDrive
+\backslash
+
+\backslash
+Desktop
+\backslash
+
+\backslash
+pg sem 3
+\backslash
+
+\backslash
+AP
+\backslash
+
+\backslash
+Assigments
+\backslash
+
+\backslash
+Data
+\backslash
+
+\backslash
+diabetes - diabetes.csv")
+\end_layout
+
+\begin_layout Plain Layout
+
+#--partition 
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+index=sample(nrow(data),floor((2/3)*nrow(data)),F) 
+\end_layout
+
+\begin_layout Plain Layout
+
+train_data=data[index,] 
+\end_layout
+
+\begin_layout Plain Layout
+
+test_data=data[-index,]
+\end_layout
+
+\begin_layout Plain Layout
+
+x_train=train_data[,-9] 
+\end_layout
+
+\begin_layout Plain Layout
+
+y_train=train_data$Outcome 
+\end_layout
+
+\begin_layout Plain Layout
+
+x_test=test_data[,-9] 
+\end_layout
+
+\begin_layout Plain Layout
+
+y_test=test_data$Outcome
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+a) 𝑘𝑘-nearest neighbour rule-
+\end_layout
+
+\begin_layout Standard
+i.
+ choosing 𝑘𝑘 optimally through leave-one-out cross-validation
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,eval=T>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+best_k <- 1 
+\end_layout
+
+\begin_layout Plain Layout
+
+best_acc <- 0
+\end_layout
+
+\begin_layout Plain Layout
+
+for (k in 1:(nrow(x_train) - 1)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  pred <- knn.cv(x_train, y_train, k = k)   
+\end_layout
+
+\begin_layout Plain Layout
+
+	acc <- mean(pred == y_train)  
+\end_layout
+
+\begin_layout Plain Layout
+
+  if (acc > best_acc) {     
+\end_layout
+
+\begin_layout Plain Layout
+
+best_acc <- acc     
+\end_layout
+
+\begin_layout Plain Layout
+
+best_k <- k   } }
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Optimal value of k using LOOCV is:", best_k, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Best accuracy achieved with this k:", best_acc, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+So it is clear from here that the optimal value of k is 15
+\end_layout
+
+\begin_layout Standard
+Now fitting a KNN model with k =15
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12)
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_model_condense <- knn(x_train, x_train, y_train, k = 15,prob=TRUE) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(as.factor(knn_model_condense), as.factor(y_train))
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12)
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_model_condense <- knn(x_train, x_test, y_train, k = 15,prob=TRUE) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(as.factor(knn_model_condense), as.factor(y_test))
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+72
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.71
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.93
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.89
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.86
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.80
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment - 
+\end_layout
+
+\begin_layout Itemize
+KNN model shows good performance on the training set (80% accuracy, 0.80
+ precision) but slightly lower on the test set (72% accuracy, 0.71 precision),
+ indicating some overfitting.
+ 
+\end_layout
+
+\begin_layout Itemize
+The drop in precision suggests the model may be making more false positive
+ predictions on unseen data.
+\end_layout
+
+\begin_layout Standard
+ii.
+ using a condensed training set
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+suppress_output <- capture.output({   condensed_indices <- condense(x_train,
+ y_train) }) 
+\end_layout
+
+\begin_layout Plain Layout
+
+X_train_condensed <- x_train[condensed_indices, , drop = FALSE] 
+\end_layout
+
+\begin_layout Plain Layout
+
+y_train_condensed <- y_train[condensed_indices]
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12)
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_model <- knn(X_train_condensed, x_train, y_train_condensed, k = 15,prob=TRUE
+) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(as.factor(knn_model), as.factor(y_train)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12)
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_model <- knn(X_train_condensed, x_test, y_train_condensed, k = 15,prob=TRUE)
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(as.factor(knn_model), as.factor(y_test)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+77
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+69
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.68
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.93
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.88
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.84
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.77
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment-
+\end_layout
+
+\begin_layout Itemize
+The accuracy decline from 77% in training to 69% in testing suggests the
+ model has some degree of overfitting.
+ It performs reasonably well on the training data but struggles to generalize
+ to unseen data.
+\end_layout
+
+\begin_layout Itemize
+The precision drop indicates that the model is making more false positive
+ predictions on the test set compared to the training set.
+ This suggests that some patterns the model learned during training might
+ not apply well to new data.
+\end_layout
+
+\begin_layout Itemize
+The performance difference is not extreme, which indicates that the model
+ is not overfitting heavily, but there is room for improvement 
+\end_layout
+
+\begin_layout Standard
+iii.
+ using an edited training set obtained by the MULTIEDIT algorithm
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+multi_edit <- function(X_train, y_train, max_iter = 5, k = 3) {   
+\end_layout
+
+\begin_layout Plain Layout
+
+for (i in 1:max_iter) {     
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Iteration:", i, "
+\backslash
+n")          
+\end_layout
+
+\begin_layout Plain Layout
+
+preds <- knn(X_train, X_train, y_train, k = k)          
+\end_layout
+
+\begin_layout Plain Layout
+
+errors <- which(preds != y_train)         
+\end_layout
+
+\begin_layout Plain Layout
+
+if (length(errors) == 0) {       
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("No errors found.
+ Stopping early.
+\backslash
+n")       
+\end_layout
+
+\begin_layout Plain Layout
+
+break     }          
+\end_layout
+
+\begin_layout Plain Layout
+
+X_train <- X_train[-errors, , drop = FALSE]     
+\end_layout
+
+\begin_layout Plain Layout
+
+y_train <- y_train[-errors]          
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(length(errors), "misclassified instances removed.
+\backslash
+n")   }      
+\end_layout
+
+\begin_layout Plain Layout
+
+return(list(X_train = X_train, y_train = y_train)) }
+\end_layout
+
+\begin_layout Plain Layout
+
+edited_data <- multi_edit(x_train, y_train)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12)
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_model_edited <- knn(train =edited_data$X_train,test= x_train, edited_data$y_
+train, k = 15,prob=TRUE)
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(factor(knn_model_edited), as.factor(y_train))
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12)
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_model_edited <- knn(edited_data$X_train, x_test, edited_data$y_train,
+ k = 15,prob=TRUE)
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(factor(knn_model_edited),as.factor(y_test))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+77
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+72
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.70
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.93
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.92
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.84
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.81
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment-
+\end_layout
+
+\begin_layout Itemize
+The test set acuuracy and precision improved in this case but the test set
+ accuracy and precision remain highest where none of this methods used (case
+ i.)
+\end_layout
+
+\begin_layout Subsubsection*
+b) Using Linear Discriminant Analysis
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+lda_model <- lda(Outcome ~ ., data = train_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+lda_predictions <- predict(lda_model, newdata = x_train)
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <-as.factor(lda_predictions$class) 
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+lda_model <- lda(Outcome ~ ., data = train_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+lda_predictions <- predict(lda_model, newdata = x_test)
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <-as.factor(lda_predictions$class) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(predicted_classes, as.factor(y_test))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.92
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.81
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment-
+\end_layout
+
+\begin_layout Itemize
+The training accuracy (80%) and test accuracy (73%) suggest that the model
+ performs reasonably well but shows some drop in performance on unseen data,
+ which could indicate mild overfitting.
+ The drop in precision from 0.82 (train) to 0.74 (test) implies that the model
+ may be making more false positive predictions on the test data.
+ This means that while the model learned the patterns well during training,
+ it may struggle to generalize to unseen data
+\end_layout
+
+\begin_layout Itemize
+The test set precision and accuracy here is better than KNN method.
+\end_layout
+
+\begin_layout Subsubsection*
+c) Quadratic Discriminant Analysis
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+qda_model <- qda(Outcome ~ ., data = train_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+qda_predictions <- predict(qda_model, newdata = x_train)
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <-as.factor(qda_predictions$class) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(predicted_classes, as.factor(y_train))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+qda_model <- qda(Outcome ~ ., data = train_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+qda_predictions <- predict(qda_model, newdata = x_test)
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <-as.factor(qda_predictions$class) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(predicted_classes, as.factor(y_test))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+79
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+69
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.72
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.88
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.79
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.83
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment-
+\end_layout
+
+\begin_layout Itemize
+KNN has the highest test accuracy (72%), indicating better generalization
+ to unseen data.
+ QDA and LDA have slightly lower test accuracy (69% and 68%, respectively),
+ suggesting these models may struggle more with unseen data.
+\end_layout
+
+\begin_layout Itemize
+QDA has the highest test precision (0.72), indicating fewer false positives
+ in predictions.
+ KNN comes close with a test precision of 0.71, followed by LDA with 0.70.
+\end_layout
+
+\begin_layout Itemize
+LDA and QDA show slightly larger gaps between training and test accuracy
+ than KNN, suggesting KNN generalizes better overall.
+\end_layout
+
+\begin_layout Subsubsection*
+d) Flexible Discriminant Analysis with Multivariate Adaptive Regression
+ Splines (MARS)
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+fda_model <- fda(Outcome ~ ., data = train_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+fda_predictions <- predict(fda_model, newdata = x_train)
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <-as.factor(fda_predictions) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(predicted_classes, as.factor(y_train))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+fda_model <- fda(Outcome ~ ., data = train_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+fda_predictions <- predict(fda_model, newdata = x_test)
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <-as.factor(fda_predictions) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(predicted_classes, as.factor(y_test))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.91
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment-
+\end_layout
+
+\begin_layout Itemize
+FDA performs better in terms of test accuracy and precision compared to
+ KNN, LDA, and QDA, with the most stable performance across both training
+ and test sets.
+ 
+\end_layout
+
+\begin_layout Itemize
+KNN and QDA show signs of overfitting, with larger drops in performance
+ from training to test sets.
+ 
+\end_layout
+
+\begin_layout Itemize
+LDA performs reasonably well but still falls slightly behind FDA in both
+ accuracy and precision.
+ 
+\end_layout
+
+\begin_layout Itemize
+Overall, FDA seems to be the most suitable model, especially if consistent
+ performance and fewer false positives are the priorities.
+\end_layout
+
+\begin_layout Subsubsection*
+e) Using Penalized Discriminant Analysis with Generalized Ridge Regression
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+pda_model <- fda(Outcome ~ ., data = train_data,lambda=0.1)
+\end_layout
+
+\begin_layout Plain Layout
+
+pda_predictions <- predict(pda_model, newdata = x_train)
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <-as.factor(pda_predictions) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(predicted_classes, as.factor(y_train))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+pda_model <- fda(Outcome ~ ., data = train_data,lambda=0.1)
+\end_layout
+
+\begin_layout Plain Layout
+
+pda_predictions <- predict(pda_model, newdata = x_test)
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <-as.factor(pda_predictions) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(predicted_classes, as.factor(y_test))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.91
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment-
+\end_layout
+
+\begin_layout Itemize
+Choosing lambda 0.1 does not change the results than the previous ones but
+ if we keep on changing lambda and observe the results repeatedly then we
+ might find improvements.
+\end_layout
+
+\begin_layout Subsubsection*
+f) Mixture Discriminant Analysis
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+mda_model <- mda(Outcome ~ ., data = train_data, subclasses = 2)
+\end_layout
+
+\begin_layout Plain Layout
+
+mda_predictions <- predict(mda_model, newdata = x_train)
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <-as.factor(mda_predictions) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(predicted_classes, as.factor(y_train))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+mda_model <- mda(Outcome ~ ., data = train_data, subclasses = 2)
+\end_layout
+
+\begin_layout Plain Layout
+
+mda_predictions <- predict(mda_model, newdata = x_test)
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <-as.factor(mda_predictions) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(predicted_classes, as.factor(y_test))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.81
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.92
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.86
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.79
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment-
+\end_layout
+
+\begin_layout Itemize
+Precision for test set slightly dipped rest is same as before and we do
+ not receive any better improvements using Mixture Discriminant Analysis
+\end_layout
+
+\begin_layout Subsubsection*
+g) Using logistic regression
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+logi_model=glm(Outcome~.,data=train_data,family = "binomial") 
+\end_layout
+
+\begin_layout Plain Layout
+
+logi_predictions <- predict(logi_model, newdata = x_train ,type="response")
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <- as.factor(ifelse(logi_predictions > 0.5, 1, 0))
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(predicted_classes, as.factor(y_train))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+logi_model=glm(Outcome~.,data=train_data,family = "binomial") 
+\end_layout
+
+\begin_layout Plain Layout
+
+logi_predictions <- predict(logi_model, newdata = x_test ,type="response")
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <- as.factor(ifelse(logi_predictions > 0.5, 1, 0))  
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix <- confusionMatrix(predicted_classes, as.factor(y_test))
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.81
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.90
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment-
+\end_layout
+
+\begin_layout Itemize
+Results are almost same as the previous result no improvement found
+\end_layout
+
+\begin_layout Subsubsection*
+h) Ensemble classification with 
+\end_layout
+
+\begin_layout Standard
+i.
+ Bagging by Breiman’s algorithm, using classification trees as single classifier
+s
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+bagging_model <- bagging(Outcome ~ ., data = train_data, nbagg = 50,coob
+ = TRUE) 
+\end_layout
+
+\begin_layout Plain Layout
+
+y_train <- factor(train_data$Outcome, levels = c(0, 1))
+\end_layout
+
+\begin_layout Plain Layout
+
+bagging_predictions <- predict(bagging_model, newdata = train_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+bagging_predictions=ifelse(bagging_predictions>0.5,1,0)
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix_bagging <- confusionMatrix(as.factor(bagging_predictions), as.factor(y
+_train)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+bagging_model <- bagging(Outcome ~ ., data = train_data, nbagg = 50,coob
+ = TRUE) 
+\end_layout
+
+\begin_layout Plain Layout
+
+y_test <- factor(test_data$Outcome, levels = c(0, 1))
+\end_layout
+
+\begin_layout Plain Layout
+
+bagging_predictions <- predict(bagging_model, newdata = test_data,type=
+\begin_inset Quotes erd
+\end_inset
+
+probability
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+bagging_predictions=ifelse(bagging_predictions>0.5,1,0)
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix_bagging <- confusionMatrix(as.factor(bagging_predictions), as.factor(y
+_test)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+89
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.89
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment-
+\end_layout
+
+\begin_layout Itemize
+Only training set results have been improved so this actually caused over-fitted
+ result
+\end_layout
+
+\begin_layout Standard
+ii.
+ Boosting by the AdaBoost.M1 algorithm of Freund and Schapire, using classificati
+on trees as single classifiers 
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12)  
+\end_layout
+
+\begin_layout Plain Layout
+
+train_data$Outcome <- as.factor(train_data$Outcome) 
+\end_layout
+
+\begin_layout Plain Layout
+
+adaboost_model <- boosting(   Outcome ~ .,              data = train_data,
+          mfinal = 50,               control = rpart.control(maxdepth = 1,cp=0)
+  )
+\end_layout
+
+\begin_layout Plain Layout
+
+adaboost_predictions <- predict(adaboost_model, newdata = train_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+y_test <- factor(test_data$Outcome, levels = c(0, 1)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <- factor(adaboost_predictions$class, levels = c(0, 1))
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix_boosting <- confusionMatrix(predicted_classes, y_train)
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12)  
+\end_layout
+
+\begin_layout Plain Layout
+
+train_data$Outcome <- as.factor(train_data$Outcome) 
+\end_layout
+
+\begin_layout Plain Layout
+
+adaboost_model <- boosting(   Outcome ~ .,              data = train_data,
+          mfinal = 50,               control = rpart.control(maxdepth = 1,cp=0)
+  )
+\end_layout
+
+\begin_layout Plain Layout
+
+adaboost_predictions <- predict(adaboost_model, newdata = test_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+y_test <- factor(test_data$Outcome, levels = c(0, 1)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+predicted_classes <- factor(adaboost_predictions$class, levels = c(0, 1))
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix_boosting <- confusionMatrix(predicted_classes, y_test)
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment-
+\end_layout
+
+\begin_layout Itemize
+Again we observed improvements on training but not on test set which actually
+ indicates the model has overfitted
+\end_layout
+
+\begin_layout Standard
+iii.
+ Random Forests
+\end_layout
+
+\begin_layout Standard
+for Training data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12)  
+\end_layout
+
+\begin_layout Plain Layout
+
+rf_model <- randomForest(   Outcome ~ .,            data = train_data,  
+     ntree = 100,            mtry = 3,               importance = TRUE 
+    )
+\end_layout
+
+\begin_layout Plain Layout
+
+rf_predictions <- predict(rf_model, newdata = train_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+y_train <- factor(train_data$Outcome, levels = levels(rf_predictions)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix_rf <- confusionMatrix(rf_predictions, y_train)
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with training set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with training set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with training set:
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for Test data
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12)  
+\end_layout
+
+\begin_layout Plain Layout
+
+rf_model <- randomForest(   Outcome ~ .,            data = train_data,  
+     ntree = 100,            mtry = 3,               importance = TRUE 
+    )
+\end_layout
+
+\begin_layout Plain Layout
+
+rf_predictions <- predict(rf_model, newdata = test_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+y_test <- factor(test_data$Outcome, levels = levels(rf_predictions)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+conf_matrix_rf <- confusionMatrix(rf_predictions, y_test)
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conf_matrix)
+\end_layout
+
+\begin_layout Plain Layout
+
+accuracy <- conf_matrix$overall["Accuracy"]
+\end_layout
+
+\begin_layout Plain Layout
+
+precision <- conf_matrix$byClass["Precision"]
+\end_layout
+
+\begin_layout Plain Layout
+
+recall <- conf_matrix$byClass[
+\begin_inset Quotes eld
+\end_inset
+
+Recall"]
+\end_layout
+
+\begin_layout Plain Layout
+
+F_score <- 2/((1/accuracy)+(1/recall))
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Accuracy with test set:", accuracy*100, "
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("Precision with test set:", precision, "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+Recall with test set
+\begin_inset Quotes erd
+\end_inset
+
+,recall,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+cat(
+\begin_inset Quotes eld
+\end_inset
+
+F Score with test set
+\begin_inset Quotes erd
+\end_inset
+
+,F_score,
+\begin_inset Quotes erd
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Comparison
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment- 
+\end_layout
+
+\begin_layout Standard
+The models show tremendous overfitting as it acheives 100 percent accuracy
+ on train data but no improvements on test data that the previous ones.
+\end_layout
+
+\begin_layout Subsubsection*
+3.
+ From the fitted random forest model, generate a plot of the variable importance
+ measures, and comment.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,fig.height=5>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+cat("
+\backslash
+nFeature Importance:
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+print(importance(rf_model))
+\end_layout
+
+\begin_layout Plain Layout
+
+varImpPlot(rf_model, main = "Variable Importance Plot")
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comment
+\end_layout
+
+\begin_layout Itemize
+Glucose has the highest importance in both Mean Decrease Accuracy and Mean
+ Decrease Gini.
+ This suggests that glucose levels are the most critical predictor for determini
+ng diabetes in your dataset.
+ BMI (Body Mass Index) also has high importance, indicating a strong relationshi
+p between BMI and the onset of diabetes.
+\end_layout
+
+\begin_layout Itemize
+Age and Pregnancies are also relatively important, suggesting that both
+ age and pregnancy history play a role in predicting diabetes onset.
+\end_layout
+
+\begin_layout Itemize
+Blood Pressure, Insulin, Skin Thickness, and Diabetes Pedigree Function
+ appear to have lower contributions in both plots.
+ This might mean they contribute less to improving the predictive performance
+ of the model, though they are not entirely irrelevant.
+\end_layout
+
+\begin_layout Subsection*
+Overall comparison
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="13" columns="9">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Method
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test Accuracy(%)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test Recall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test Precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Train F score
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test F score
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+KNN- usual
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+72
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.93
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.89
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.71
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.86
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.80
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+KNN-condensed set
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+77
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+69
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.84
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.88
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.68
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.84
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.77
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+KNN-Multiedit algorithm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+77
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+72
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.93
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.92
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.70
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.84
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.81
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+LDA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.92
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.81
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+QDA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+79
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+69
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.88
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.79
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.72
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.83
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+FDA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.91
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+PDA with Ridge regression
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.91
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+MDA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.92
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.81
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.86
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.79
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Logistic Regression
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.90
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.81
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ensemble - Bagging
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+89
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.89
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ensemble - AdaBoost
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ensemble - Random Forest
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.74
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.78
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Conclusion
+\end_layout
+
+\begin_layout Standard
+The best performing models in terms of balanced accuracy and precision are
+ FDA, LDA, MDA, Bagging, AdaBoost, and Logistic Regression, each achieving
+ 73% test accuracy and 0.74 precision.
+ These models generalize well to unseen data, making them suitable choices
+ for this problem.
+\end_layout
+
+\begin_layout Standard
+Random Forest shows signs of overfitting with 100% training accuracy, while
+ KNN models underperform slightly, suggesting they might not be the optimal
+ choice for this dataset.
+\end_layout
+
+\begin_layout Standard
+Given the results, ensemble methods like Bagging and AdaBoost offer a slight
+ edge, as they provide consistent performance with good generalization and
+ robustness.
+\end_layout
+
+\begin_layout Subsubsection*
+2.
+ To compare the performance of all the classifiers trained in problem no.
+ 1, show their ROC curves in a single plot and comment.
+ You can use the ROCR package in R for this purpose.
+\end_layout
+
+\begin_layout Standard
+The plot function
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+y_test <- factor(test_data$Outcome)  
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc <- function(probabilities, true_labels,color,hide_axis=F) {   
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+pred <- prediction(probabilities, true_labels)      
+\end_layout
+
+\begin_layout Plain Layout
+
+perf <- performance(pred, "tpr", "fpr")           
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(perf, col=color , lwd = 2, xaxt=ifelse(hide_axis,'n','s'),yaxt=ifelse(hide_
+axis,'n','s'),        xlab =ifelse(hide_axis,"","False Positive Rate"),ylab=ifel
+se(hide_axis,"","True Positive Rate"),main=ifelse(hide_axis,"ROCR for ALL
+ models",""))    }
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Probabilities for all the models
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#-random forest
+\end_layout
+
+\begin_layout Plain Layout
+
+rf_probs <- predict(rf_model, newdata = test_data, type = "prob")[, 2] 
+\end_layout
+
+\begin_layout Plain Layout
+
+#--logistic
+\end_layout
+
+\begin_layout Plain Layout
+
+logistic_probs <- predict(logi_model, newdata = test_data, type = "response")
+\end_layout
+
+\begin_layout Plain Layout
+
+#--FDA
+\end_layout
+
+\begin_layout Plain Layout
+
+fda_probs <- predict(fda_model, newdata = test_data, type = "posterior")[,
+ 2]
+\end_layout
+
+\begin_layout Plain Layout
+
+#--LDA
+\end_layout
+
+\begin_layout Plain Layout
+
+lda_probs <- predict(lda_model, newdata = test_data)$posterior[, 2] 
+\end_layout
+
+\begin_layout Plain Layout
+
+#--MDA
+\end_layout
+
+\begin_layout Plain Layout
+
+mda_probs <- predict(mda_model, newdata = test_data, type = "posterior")[,
+ 2] 
+\end_layout
+
+\begin_layout Plain Layout
+
+#--QDA
+\end_layout
+
+\begin_layout Plain Layout
+
+qda_probs <- predict(qda_model, newdata = test_data)$posterior[, 2] 
+\end_layout
+
+\begin_layout Plain Layout
+
+#--PDA
+\end_layout
+
+\begin_layout Plain Layout
+
+pda_probs <- predict(pda_model, newdata = test_data, type = "posterior")[,
+ 2] 
+\end_layout
+
+\begin_layout Plain Layout
+
+#--bagging
+\end_layout
+
+\begin_layout Plain Layout
+
+bagging_probs <- predict(bagging_model, newdata = test_data)
+\end_layout
+
+\begin_layout Plain Layout
+
+#--boosting
+\end_layout
+
+\begin_layout Plain Layout
+
+adaboost_probs <- predict(adaboost_model, newdata = test_data)$prob[, 2]
+\end_layout
+
+\begin_layout Plain Layout
+
+#--KNN-usual
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_probs <- attr(knn_model, "prob") 
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_probs <- ifelse(knn_model == "1", knn_probs, 1 - knn_probs)
+\end_layout
+
+\begin_layout Plain Layout
+
+#--KNN condensed set
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_probs_condense <- attr(knn_model_condense, "prob") 
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_probs_condense <- ifelse(knn_model_condense == "1", knn_probs_condense,
+ 1 - knn_probs_condense)
+\end_layout
+
+\begin_layout Plain Layout
+
+#--KNN _edited
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_probs_edited <- attr(knn_model_edited, "prob") 
+\end_layout
+
+\begin_layout Plain Layout
+
+knn_probs_edited <- ifelse(knn_model_edited == "1", knn_probs_edited, 1
+ - knn_probs_edited)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+AUC of all the models
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+auc_function=function(probabilities,true_labels,model_name){   pred=prediction(p
+robabilities,true_labels)   
+\end_layout
+
+\begin_layout Plain Layout
+
+perf=performance(pred,"auc")   
+\end_layout
+
+\begin_layout Plain Layout
+
+auc=perf@y.values[[1]]   
+\end_layout
+
+\begin_layout Plain Layout
+
+return(paste(model_name,"- auc", round(auc,2))) }
+\end_layout
+
+\begin_layout Plain Layout
+
+#--legend
+\end_layout
+
+\begin_layout Plain Layout
+
+legend_vec=c(auc_function(model_name="random forest",  rf_probs,y_test),auc_func
+tion(model_name="logistic", logistic_probs,y_test),auc_function(model_name="FDA"
+, fda_probs,y_test),auc_function(model_name="LDA", lda_probs,y_test),auc_functio
+n(model_name="MDA", mda_probs,y_test),auc_function(model_name="QDA", qda_probs,y
+_test),auc_function(model_name="PDA", pda_probs,y_test),auc_function(model_name=
+"bagging", bagging_probs,y_test),auc_function(model_name="boosting", adaboost_pr
+obs,y_test),auc_function(model_name="KNN-usual", knn_probs,y_test),auc_function(
+model_name="KNN condensed ", knn_probs_condense,y_test),auc_function(model_name=
+"KNN _edited", knn_probs_edited,y_test))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Plotting the ROCR curve
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(rf_probs, y_test,color="red") 
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(hide_axis=T,logistic_probs, y_test,color="blue") 
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(hide_axis=T,fda_probs, y_test,color="green")  
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(hide_axis=T,lda_probs, y_test,color="darkgrey") 
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(hide_axis=T,mda_probs, y_test,color="cyan") 
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(qda_probs, hide_axis=T,y_test,color="darkorange") 
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(pda_probs,hide_axis=T, y_test,color="pink") 
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(bagging_probs, hide_axis=T,y_test,color="violet") 
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(adaboost_probs,hide_axis=T, y_test,color="brown") 
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(knn_probs,hide_axis=T, y_test,color="yellow") 
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(knn_probs_condense, hide_axis=T,y_test,color="seagreen")  
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot_roc(hide_axis=T,knn_probs_edited, y_test,color="chocolate")
+\end_layout
+
+\begin_layout Plain Layout
+
+par(new=T) 
+\end_layout
+
+\begin_layout Plain Layout
+
+curve(1*x+0,col="black",lty=2,xaxt='n',yaxt='n',,xlab="",ylab="")
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+legend("bottomright",legend =legend_vec,fill=c("red","blue","green","darkgrey","
+cyan","darkorange","pink","violet","brown",                            
+                    "seagreen","chocolate"))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Conclusion
+\end_layout
+
+\begin_layout Itemize
+In this comparison, FDA, LDA, PDA, and Bagging demonstrate the best predictive
+ performance with an AUC of 0.81.
+ These models might be preferred when aiming for the highest accuracy and
+ robustness.
+ However, Logistic Regression and Boosting (AUC 0.80) also perform well and
+ are good alternatives, especially if interpretability (in the case of logistic
+ regression) or ensemble methods (boosting) are desired.
+\end_layout
+
+\begin_layout Itemize
+Models like KNN (Usual) have comparatively lower performance, so they may
+ not be the best choice for tasks where predictive power is critical
+\end_layout
+
+\end_body
+\end_document
