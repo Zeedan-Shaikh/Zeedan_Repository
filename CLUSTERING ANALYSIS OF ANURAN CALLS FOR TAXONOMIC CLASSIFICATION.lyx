@@ -1,0 +1,1188 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\begin_modules
+knitr
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Clustering Analysis of Anuran Calls for Taxonomic Classification
+\end_layout
+
+\begin_layout Author
+Zeedan Shaikh
+\end_layout
+
+\begin_layout Author
+Regn no -20214160018 | Crn - STAT012 | PG SEM 3
+\end_layout
+
+\begin_layout Standard
+Loading required packages
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+pacman::p_load(MASS,clValid,cluster,dbscan,mclust)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+a.
+ Generate by simulation a training set consisting of 200 samples each from
+ the following five 4-variate normal distributions: 
+\begin_inset Formula $N_{4}$
+\end_inset
+
+(5𝑎
+\begin_inset Formula $\alpha$
+\end_inset
+
++10(2−𝑘)
+\begin_inset Formula $1_{4}$
+\end_inset
+
+,
+\begin_inset Formula $\sum$
+\end_inset
+
+),𝑘=1,2,3,4 where 
+\end_layout
+
+\begin_layout Standard
+i.
+ 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ is a 4×1 vector each of whose elements are random numbers in the interval
+ (10,20) generated with an appropriate R function using seed equal to the
+ last two digits of your class roll number,
+\end_layout
+
+\begin_layout Standard
+ii.
+ 
+\begin_inset Formula $1_{4}$
+\end_inset
+
+ is a 4×1 vector each of whose elements is equal to 1, 
+\end_layout
+
+\begin_layout Standard
+iii.
+ 𝑎 denotes a random number in the interval (1,5) generated with an appropriate
+ R function with seed equal to two times the last two digits of your class
+ roll number,
+\end_layout
+
+\begin_layout Standard
+iv.
+ 
+\begin_inset Formula $\sum$
+\end_inset
+
+ is an arbitrary non-diagonal, symmetric matrix chosen by you, ensuring
+ that the magnitude of the correlations among the variables lie between
+ 0.2 and 0.6 and exactly three of the (upper) off-diagonal elements of 
+\begin_inset Formula $\sum$
+\end_inset
+
+ are negative.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12) 
+\end_layout
+
+\begin_layout Plain Layout
+
+alpha=sample(10:20,4,F) 
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(24) 
+\end_layout
+
+\begin_layout Plain Layout
+
+a=sample(1:5,1,F)
+\end_layout
+
+\begin_layout Plain Layout
+
+sigma=c() 
+\end_layout
+
+\begin_layout Plain Layout
+
+sigma_1=c(4,-1.2,1.6,2) 
+\end_layout
+
+\begin_layout Plain Layout
+
+sigma_2=c(-1.2,4,-1.6,2) 
+\end_layout
+
+\begin_layout Plain Layout
+
+sigma_3=c(1.2,-1.6,4,-2) 
+\end_layout
+
+\begin_layout Plain Layout
+
+sigma_4=c(1.2,1.6,-2,4)
+\end_layout
+
+\begin_layout Plain Layout
+
+sigma=rbind(sigma_1,sigma_2,sigma_3,sigma_4)
+\end_layout
+
+\begin_layout Plain Layout
+
+mean_mat=sapply(1:5,function(i){return((5*a*alpha)+(10*(2-i)*rep(1,4)))})
+\end_layout
+
+\begin_layout Plain Layout
+
+sample_1=mvrnorm(200,mu=mean_mat[,1],Sigma=sigma) 
+\end_layout
+
+\begin_layout Plain Layout
+
+sample_2=mvrnorm(200,mu=mean_mat[,2],Sigma=sigma) 
+\end_layout
+
+\begin_layout Plain Layout
+
+sample_3=mvrnorm(200,mu=mean_mat[,3],Sigma=sigma) 
+\end_layout
+
+\begin_layout Plain Layout
+
+sample_4=mvrnorm(200,mu=mean_mat[,4],Sigma=sigma) 
+\end_layout
+
+\begin_layout Plain Layout
+
+sample_5=mvrnorm(200,mu=mean_mat[,5],Sigma=sigma)
+\end_layout
+
+\begin_layout Plain Layout
+
+train_mat=rbind(sample_1,sample_2,sample_3,sample_4,sample_5) 
+\end_layout
+
+\begin_layout Plain Layout
+
+head(train_mat,5)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+b.
+ Implement the following clustering algorithms on this data set, determining
+ the optimal number of clusters in each case by applying any one of the
+ cluster validation methods discussed in class.
+\end_layout
+
+\begin_layout Standard
+i.
+ 𝑘-means algorithm
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,fig.height=5>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+par(mfrow=c(1,2))
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index=c() 
+\end_layout
+
+\begin_layout Plain Layout
+
+for(i in 2:10){ 
+\end_layout
+
+\begin_layout Plain Layout
+
+obj=kmeans(x=train_mat,i) 
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index[i]=dunn(dist(train_mat),as.vector(obj$cluster)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+} 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(dun_index,typ="b",xlab="No of Clusters",ylab="Dunn Index")
+\end_layout
+
+\begin_layout Plain Layout
+
+which.max(dun_index)
+\end_layout
+
+\begin_layout Plain Layout
+
+clus=clusGap(train_mat,FUNcluster=kmeans,K.max=10) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(clus,xlab="No of Clusters",ylab="Value of Gap Statistic",main="") 
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+From plot of Dunn Index the suitable no.
+ of Cluster is 4 as its the least no of clusters that maximises the index.
+\end_layout
+
+\begin_layout Itemize
+From plot of Gap Statistic the suitable no.
+ of Cluster is 6 as the cluster gap is maximised here.
+ 
+\end_layout
+
+\begin_layout Standard
+ii.
+ 𝑘-medoids algorithm
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+par(mfrow=c(3,2))
+\end_layout
+
+\begin_layout Plain Layout
+
+obj2=pam(train_mat,4) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj2,which=2,main="") 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj2,which=1,main="")
+\end_layout
+
+\begin_layout Plain Layout
+
+obj2=pam(train_mat,5) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj2,which=2,main="") 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj2,which=1,main="")
+\end_layout
+
+\begin_layout Plain Layout
+
+obj2=pam(train_mat,6) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj2,which=2,main="") 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj2,which=1,main="")
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index=c()
+\end_layout
+
+\begin_layout Plain Layout
+
+for(i in 2:8){ 
+\end_layout
+
+\begin_layout Plain Layout
+
+obj2=pam(train_mat,i) 
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index[i]=dunn(dist(train_mat),obj2$clustering) } 
+\end_layout
+
+\begin_layout Plain Layout
+
+which.max(dun_index)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(dun_index,typ="b",xlab="No of Clusters",ylab="Dunn Index")
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+From the above plots we could conclude that number of clusters must be 5
+ as it maximises the avearge Silhouette width.
+\end_layout
+
+\begin_layout Itemize
+From plot of Dunn Index the suitable no.
+ of Cluster is 5 as its the least no of clusters that maximises the index.
+\end_layout
+
+\begin_layout Standard
+iii.
+ single linkage algorithm
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,fig.height=4>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+par(mfrow=c(1,2))
+\end_layout
+
+\begin_layout Plain Layout
+
+obj3=agnes(train_mat,method="single") 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj3,which=1,main=
+\begin_inset Quotes erd
+\end_inset
+
+Banner plot of single linkage
+\begin_inset Quotes erd
+\end_inset
+
+) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj3,which=2,main=
+\begin_inset Quotes erd
+\end_inset
+
+Dendogram of single linkage
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index=c()
+\end_layout
+
+\begin_layout Plain Layout
+
+for(i in 2:8){ 
+\end_layout
+
+\begin_layout Plain Layout
+
+clust=cutree(obj3,i) 
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index[i]=dunn(dist(train_mat),clust) } 
+\end_layout
+
+\begin_layout Plain Layout
+
+which.max(dun_index)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,fig.height=4>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(dun_index,typ="b",xlab="No of Clusters",ylab="Dunn Index")
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Observing the banner plot we could conclude that at height 4 we are having
+ 5 clusters .
+\end_layout
+
+\begin_layout Itemize
+Observing the dendogram we could conclude that at height 6 we are having
+ 5 clusters .
+\end_layout
+
+\begin_layout Itemize
+From plot of Dunn Index the suitable no.
+ of Cluster is 5 as its the least no of clusters that maximises the index.
+\end_layout
+
+\begin_layout Standard
+iv.
+ complete linkage algorithm
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,fig.height=3>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+par(mfrow=c(1,2))
+\end_layout
+
+\begin_layout Plain Layout
+
+obj4=agnes(train_mat,method="complete") 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj4,which=1,,main=
+\begin_inset Quotes erd
+\end_inset
+
+Banner plot of complete linkage 
+\begin_inset Quotes erd
+\end_inset
+
+) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj4,which=2,main=
+\begin_inset Quotes erd
+\end_inset
+
+Dendogram of complete linkage 
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index=c()
+\end_layout
+
+\begin_layout Plain Layout
+
+for(i in 2:8){ 
+\end_layout
+
+\begin_layout Plain Layout
+
+clust=cutree(obj4,i) 
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index[i]=dunn(dist(train_mat),clust) } 
+\end_layout
+
+\begin_layout Plain Layout
+
+which.max(dun_index)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,fig.height=4>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(dun_index,typ="b",xlab="No of Clusters",ylab="Dunn Index")
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Observing the banner plot we could not conclude the number of clusters properly
+ .
+\end_layout
+
+\begin_layout Itemize
+Observing the dendogram we could conclude that at height 25 we are having
+ 5 clusters .
+\end_layout
+
+\begin_layout Itemize
+From plot of Dunn Index the suitable no.
+ of Cluster is 5 as its the least no of clusters that maximises the index.
+\end_layout
+
+\begin_layout Standard
+v.
+ divisive clustering algorithm
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,fig.height=4>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+par(mfrow=c(1,2))
+\end_layout
+
+\begin_layout Plain Layout
+
+obj5=diana(train_mat) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj5,which=1,main=
+\begin_inset Quotes erd
+\end_inset
+
+Banner plot
+\begin_inset Quotes erd
+\end_inset
+
+) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj5,which=2,main=
+\begin_inset Quotes erd
+\end_inset
+
+Dendogram
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index=c() 
+\end_layout
+
+\begin_layout Plain Layout
+
+for(i in 2:10){    
+\end_layout
+
+\begin_layout Plain Layout
+
+clust=cutree(obj5,i)    
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index[i]=dunn(dist(train_mat),clust) }  
+\end_layout
+
+\begin_layout Plain Layout
+
+which.max(dun_index)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA,fig.height=4>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(dun_index,typ="b",xlab="No of Clusters",ylab="Dunn Index")
+\end_layout
+
+\begin_layout Plain Layout
+
+@ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Observing the banner plot we could not conclude the number of clusters properly
+ .
+\end_layout
+
+\begin_layout Itemize
+Observing the dendogram we could conclude that at height 25 we are having
+ 5 clusters .
+\end_layout
+
+\begin_layout Itemize
+From plot of Dunn Index the suitable no.
+ of Cluster is 7 as its the least no of clusters that maximises the index.
+\end_layout
+
+\begin_layout Standard
+vi.
+ DBSCAN algorithm (with appropriate values of the parameters)
+\end_layout
+
+\begin_layout Itemize
+eps and minPts are selected using the rule mention in webpage (
+\begin_inset CommandInset href
+LatexCommand href
+name "click here"
+target "https://www.datanovia.com/en/lessons/dbscan-density-based-clustering-essentials/"
+literal "false"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#--taking minpts as 5 as It is greater than the dimension of the data 
+\end_layout
+
+\begin_layout Plain Layout
+
+#--chosing eps from k-distance plot
+\end_layout
+
+\begin_layout Plain Layout
+
+mat=kNN(train_mat, k = 5)  
+\end_layout
+
+\begin_layout Plain Layout
+
+k_dist=sort(mat$dist[,5])  
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(k_dist,typ="l",xlab="data points",ylab="k distances",main="k distance
+ plot")  
+\end_layout
+
+\begin_layout Plain Layout
+
+abline(h=2.8,col="red")
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+We selected a range of values arround the value where elbow is created in
+ the plot and calculated the dunn index to select optimal eps value.
+\end_layout
+
+\begin_layout Itemize
+Creating the clustering with best eps and minPts values
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+db_seq=seq(2.5,3.5,0.1)
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index=c() 
+\end_layout
+
+\begin_layout Plain Layout
+
+for(i in 2:10){  
+\end_layout
+
+\begin_layout Plain Layout
+
+obj6=dbscan(train_mat,eps=db_seq[i],minPts=5) 
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index[i]=dunn(dist(train_mat),obj6$cluster) } 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(dun_index,typ="b",xlab="No of Clusters",ylab="Dunn Index")  
+\end_layout
+
+\begin_layout Plain Layout
+
+which.max(dun_index)
+\end_layout
+
+\begin_layout Plain Layout
+
+dbscan(train_mat,eps=db_seq[4],minPts=5) 
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+We have been able to classify the data into 5 clusters using DBSCAN with
+ eps 2.8 and minPts 5 .
+\end_layout
+
+\begin_layout Standard
+vii.
+ OPTICS algorithm (with appropriate values of the parameters)
+\end_layout
+
+\begin_layout Itemize
+We will use the same parameters and create the best clusters.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index=c() 
+\end_layout
+
+\begin_layout Plain Layout
+
+for(i in 2:10){    
+\end_layout
+
+\begin_layout Plain Layout
+
+obj6=optics(train_mat,eps=db_seq[i],minPts=5)   
+\end_layout
+
+\begin_layout Plain Layout
+
+dun_index[i]=dunn(dist(train_mat),extractDBSCAN(obj6,db_seq[i])$cluster)
+ }  
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(dun_index,typ="b",xlab="No of Clusters",ylab="Dunn Index")  
+\end_layout
+
+\begin_layout Plain Layout
+
+which.max(dun_index)
+\end_layout
+
+\begin_layout Plain Layout
+
+table(extractDBSCAN(optics(train_mat,eps=db_seq[4],minPts=5),db_seq[4])$cluster)
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(obj6,ylab=
+\begin_inset Quotes erd
+\end_inset
+
+Reachability distance
+\begin_inset Quotes erd
+\end_inset
+
+,col=extractDBSCAN(obj6,db_seq[4])$cluster)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+From the Reachability Plot we can clearly observe that 5 clusters in the
+ data and they are nearly of equal density.
+ 
+\end_layout
+
+\begin_layout Itemize
+We have been able to classify the data into 5 clusters using OPTICS with
+ eps 2.8 and minPts 5 .
+\end_layout
+
+\begin_layout Standard
+viii.
+ Deconvolution of Gaussian Mixture Models through MLE
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<comment=NA>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+ BIC_index=c() 
+\end_layout
+
+\begin_layout Plain Layout
+
+for(i in 1:10){ 
+\end_layout
+
+\begin_layout Plain Layout
+
+gmm_fit <- Mclust(as.data.frame(train_mat),G=i) 
+\end_layout
+
+\begin_layout Plain Layout
+
+BIC_index[i]=summary(gmm_fit)$bic } 
+\end_layout
+
+\begin_layout Plain Layout
+
+BIC_index[which.min(BIC_index)] 
+\end_layout
+
+\begin_layout Plain Layout
+
+gmm_fit <- Mclust(as.data.frame(train_mat))
+\end_layout
+
+\begin_layout Plain Layout
+
+summary(gmm_fit)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+It could clearly classify the data into 5 clusters where the optimal model
+ is selected using BIC, ICL.
+\end_layout
+
+\end_body
+\end_document
